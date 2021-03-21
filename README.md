@@ -5,7 +5,7 @@ Currently randomly answers survey monkey questions with random sentances, mitiga
 
 ## Installation
 
-Install the latest stable version of the selenium [chrome webdriver](https://chromedriver.chromium.org/downloads) and place it in `/webdrivers/chrome`. \
+Install the latest stable version of the selenium [chrome webdriver](https://chromedriver.chromium.org/downloads) and place it in `Abuse_Survey/webdrivers/chrome`. \
 Install the latest stable version of [python3](https://www.python.org/downloads/).\
 Install the remaining packages in requirements using [pip](https://pip.pypa.io/en/stable/):
 
