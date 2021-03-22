@@ -9,7 +9,7 @@ from json import dump as json_dump
 lock_file = Lock()
 
 
-class Survey_Destroyer(Thread):
+class Survey(Thread):
     """
     Abstract base class for survey destorying
     """

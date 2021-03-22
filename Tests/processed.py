@@ -18,7 +18,7 @@ CHROME_DRIVER_PATH = 'C:/Users/algie/Documents/chrome/chromedriver'
 lock_file = Lock()
 
 
-class Survey_Destroyer(Process):
+class Survey(Process):
     """
     Abstract base class for survey destorying
     """
@@ -50,7 +50,7 @@ class Survey_Destroyer(Process):
         pass
 
 
-class Monkey_Destroyer(Survey_Destroyer):
+class Survey_Monkey(Survey):
     """
     Class to abuse SurveyMonkey
     """
@@ -467,7 +467,7 @@ def run(process_no, repeat_no, survey, verbosity=1, protections=False):
     processes = []
 
     for i in range(1, process_no+1):
-        processes.append(Monkey_Destroyer(
+        processes.append(Survey_Monkey(
             survey, i, repeat_no, protect=protections, verbose=verbosity))
 
     for i in range(0, process_no):

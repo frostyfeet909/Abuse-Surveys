@@ -18,7 +18,7 @@ VERBOSE = 1  # Level of verbosity (format: 0-2)
 lock_file = Lock()
 
 
-class Survey_Destroyer(Thread):
+class Survey(Thread):
     """
     Abstract base class for survey destorying
     """
@@ -48,7 +48,7 @@ class Survey_Destroyer(Thread):
         pass
 
 
-class Monkey_Destroyer(Survey_Destroyer):
+class Survey_Monkey(Survey):
     """
     Class to abuse SurveyMonkey
     """
@@ -457,7 +457,7 @@ def run(thread_no, repeat_no):
     threads = []
 
     for i in range(1, thread_no+1):
-        threads.append(Monkey_Destroyer('XQ6J57B', i, repeat_no, protect=True))
+        threads.append(Survey_Monkey('XQ6J57B', i, repeat_no, protect=True))
 
     for i in range(0, thread_no):
         threads[i].start()

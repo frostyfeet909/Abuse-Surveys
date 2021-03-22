@@ -7,11 +7,11 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from Abuse_Survey import Base_Survey
+from Abuse_Survey import survey
 from Abuse_Survey.utility import Time_Lock, get_sentence
 
 
-class Monkey_Destroyer(Base_Survey.Survey_Destroyer):
+class Survey_Monkey(survey.Survey):
     """
     Class to abuse SurveyMonkey
     """

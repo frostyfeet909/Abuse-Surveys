@@ -9,12 +9,12 @@ def abuse_survey_monkey(process_no, repeat_no, survey, verbosity=1, protections=
         verbosity - Level of verbosity : Integer (0-2)
         protections - Does the survey have protections : Boolean
     """
-    from Abuse_Survey import Survey_Monkey
+    from Abuse_Survey import survey_monkey
 
     processes = []
 
     for i in range(1, process_no+1):
-        processes.append(Survey_Monkey.Monkey_Destroyer(
+        processes.append(survey_monkey.Survey_Monkey(
             survey, i, repeat_no, protect=protections, verbose=verbosity))
 
     for i in range(0, process_no):
