@@ -1,10 +1,9 @@
 # Program to abuse surveys - Random Checkboxes + Random Written answers
 from threading import Lock, Thread
-from os.path import join, isfile
+from os.path import join, isfile, dirname, realpath
 from time import time
 from json import load as json_load
 from json import dump as json_dump
-from Abuse_Survey import get_location
 
 
 lock_file = Lock()
@@ -63,7 +62,8 @@ class Survey_Destroyer(Thread):
         if self.verbose >= 2:
             print("[*]%i: Saved" % self.ID)
 
-        file_loc = join(get_location.get_location(),
+        base_dir = dirname(realpath(__file__))
+        file_loc = join(base_dir,
                         "results", self.survey_type, self.survey + ".json")
 
         # Open and save the results - One thread access at a time

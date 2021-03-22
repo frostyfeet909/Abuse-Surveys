@@ -1,16 +1,14 @@
 # Program to abuse survey monkey
 import re
 from random import randint
-from os.path import join
+from os.path import join, dirname, realpath
 from time import time
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from Abuse_Survey import Base_Survey
-from Abuse_Survey import get_sentence
-from Abuse_Survey import Time_Lock
-from Abuse_Survey import get_location
+from Abuse_Survey.utility import Time_Lock, get_sentence
 
 
 class Monkey_Destroyer(Base_Survey.Survey_Destroyer):
@@ -39,8 +37,10 @@ class Monkey_Destroyer(Base_Survey.Survey_Destroyer):
 
         try:
             # Setup and connect to survey
+            base_dir = dirname(realpath(__file__))
+            file_loc = join(base_dir, "webdrivers", "chromedriver.exe")
             self.driver = webdriver.Chrome(
-                executable_path=join(get_location.get_location(), "webdrivers", "chromedriver.exe"), chrome_options=chrome_options)
+                executable_path=file_loc, chrome_options=chrome_options)
             self.driver.get(
                 'https://www.surveymonkey.co.uk/r/%s' % self.survey)
             if self.verbose <= 0:
