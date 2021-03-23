@@ -1,5 +1,5 @@
 # Abuse Surveys
-https://youtu.be/jeIkZlzENbY \
+https://youtu.be/jeIkZlzENbY Love u Ewan (^з^)-☆Chu!!\
 A set of OOP python programs to abuse online surveys.\
 Currently randomly answers survey monkey questions with random sentances, mitigates the browser protection and is multithreaded for performance.
 
