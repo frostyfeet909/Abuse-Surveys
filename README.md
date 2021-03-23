@@ -6,7 +6,7 @@ Currently randomly answers survey monkey questions with random sentances, mitiga
 ## Installation
 
 1. Install the latest stable version of [python3](https://www.python.org/downloads/).
-2. Install the remaining packages in requirements and setup the file strucutre by running `setup.py`:
+2. Install the remaining packages in requirements and setup the file strucutre by running `install_requirements.py`:
 
    ```bash
    python setup.py
