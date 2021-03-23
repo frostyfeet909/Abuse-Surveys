@@ -9,7 +9,7 @@ Currently randomly answers survey monkey questions with random sentances, mitiga
 2. Install the remaining packages in requirements and setup the file strucutre by running `install_requirements.py`:
 
    ```bash
-   python setup.py
+   python install_requirements.py
    ```
 
 3. Install the latest stable version of the selenium [chrome webdriver](https://chromedriver.chromium.org/downloads) and place it in `Abuse_Survey/webdrivers`.
