@@ -28,6 +28,12 @@ Abuse_Survey.run()
 # Start a text UI for the same thing
 ```
 
+This is also illustrated in `Tests/basic_test.py`
+```bash
+python basic_test.py
+# Runs the same example as above with (5, 5, 'XQ6J57B')
+```
+
 ## License
 
 me no know
