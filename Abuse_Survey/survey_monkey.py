@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException, ElementNotInterac
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from Abuse_Survey import survey
-from Abuse_Survey.utility import Time_Lock, get_sentence
+from Abuse_Survey.utility import time_lock, get_sentence
 
 
 class Survey_Monkey(survey.Survey):
@@ -26,7 +26,7 @@ class Survey_Monkey(survey.Survey):
         """
         super().__init__(survey, ID, repeats, protect, verbose)
         self.survey_type = "survey_monkey"
-        self.lock = Time_Lock.Time_Lock()
+        self.lock = time_lock.Time_Lock()
 
     def setup(self):
         """
@@ -323,7 +323,7 @@ class Survey_Monkey(survey.Survey):
             self.lock.release()
 
         if self.verbose >= 2:
-            print("[*]%i: MultiChoice annswered" % self.ID)
+            print("[*]%i: MultiChoice answered" % self.ID)
         return True
 
     def do_comment(self, question_ID, element):
