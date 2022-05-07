@@ -36,4 +36,4 @@ python basic_test.py
 
 ## License
 
-me no know
+MIT
