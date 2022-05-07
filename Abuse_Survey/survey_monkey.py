@@ -4,11 +4,14 @@ from random import randint
 from os.path import join, dirname, realpath
 from time import time
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    ElementNotInteractableException,
+)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from Abuse_Survey import survey
-from Abuse_Survey.utility import time_lock, get_sentence
+import survey
+from utility import time_lock, get_sentence
 
 
 class Survey_Monkey(survey.Survey):
@@ -18,13 +21,18 @@ class Survey_Monkey(survey.Survey):
 
     def __init__(self, survey, ID, repeats, protect=False, verbose=1):
         """
-            survey - Survey webaddress : String
-            ID - UUID : Integer
-            repeats - No. of survey rpeats : Integer > 0
-            protect - Does survey have protection enabled : Boolean
-            verbose - How verbose do you want to be (format: 0-2) : Integer
+        survey - Survey webaddress : String
+        ID - UUID : Integer
+        repeats - No. of survey rpeats : Integer > 0
+        protect - Does survey have protection enabled : Boolean
+        verbose - How verbose do you want to be (format: 0-2) : Integer
         """
         super().__init__(survey, ID, repeats, protect, verbose)
+        self.survey = (
+            self.survey
+            if "https://www.surveymonkey.co.uk/r/" not in self.survey
+            else self.survey.split("/")[-1]
+        )
         self.survey_type = "survey_monkey"
         self.lock = time_lock.Time_Lock()
 
@@ -40,9 +48,9 @@ class Survey_Monkey(survey.Survey):
             base_dir = dirname(realpath(__file__))
             file_loc = join(base_dir, "webdrivers", "chromedriver.exe")
             self.driver = webdriver.Chrome(
-                executable_path=file_loc, chrome_options=chrome_options)
-            self.driver.get(
-                'https://www.surveymonkey.co.uk/r/%s' % self.survey)
+                executable_path=file_loc, chrome_options=chrome_options
+            )
+            self.driver.get("https://www.surveymonkey.co.uk/r/%s" % self.survey)
             if self.verbose <= 0:
                 self.driver.minimize_window()
             self.active = True
@@ -60,8 +68,7 @@ class Survey_Monkey(survey.Survey):
         Refresh active webdriver
         """
         try:
-            self.driver.get(
-                'https://www.surveymonkey.co.uk/r/%s' % self.survey)
+            self.driver.get("https://www.surveymonkey.co.uk/r/%s" % self.survey)
             # self.driver.minimize_window()
             self.active = True
             if self.verbose >= 2:
@@ -117,11 +124,13 @@ class Survey_Monkey(survey.Survey):
                         print("[*]%i: Round being reset" % self.ID)
                     self.protect = True
                 else:
-                    time_elapsed = str(round(time()-time_initial))
+                    time_elapsed = str(round(time() - time_initial))
 
                     if self.verbose >= 1:
-                        print("[*]%i: Round %i has Finished it took: %s seconds" %
-                              (self.ID, self.iteration, time_elapsed))
+                        print(
+                            "[*]%i: Round %i has Finished it took: %s seconds"
+                            % (self.ID, self.iteration, time_elapsed)
+                        )
                     self.iteration += 1
 
                 # If under the desired number of repeats then restart otherwise shutdown
@@ -135,10 +144,9 @@ class Survey_Monkey(survey.Survey):
 
         # End
         self.save_choices()
-        elapsed = str(round((time()-self.start_time)/60))
+        elapsed = str(round((time() - self.start_time) / 60))
         if self.verbose >= 1:
-            print("[*]%i: Monkey destroyed, took: %s minutes" %
-                  (self.ID, elapsed))
+            print("[*]%i: Monkey destroyed, took: %s minutes" % (self.ID, elapsed))
 
     def clear_buttons(self):
         """
@@ -195,8 +203,7 @@ class Survey_Monkey(survey.Survey):
 
         if len(answers) == 0:
             if self.verbose >= 1:
-                print("[!]%i: Answers not found for %s" %
-                      (self.ID, question_ID))
+                print("[!]%i: Answers not found for %s" % (self.ID, question_ID))
             answers = None
 
         if self.verbose >= 2:
@@ -228,13 +235,16 @@ class Survey_Monkey(survey.Survey):
             return False
 
         # Identify the question type
-        element_type = answer.get_attribute('class')
+        element_type = answer.get_attribute("class")
         if element_type.startswith("checkbox-button"):
             return self.do_checkbox(question_ID, answer_IDs)
         elif element_type.startswith("radio-button"):
             return self.do_multichoice(question_ID, answer_IDs)
         elif element_type.startswith("textarea"):
             return self.do_comment(question_ID, answer)
+        elif element_type.startswith("wds-input"):
+            # Hacky implementation
+            return self.do_input(question_ID, answer)
         else:
             if self.verbose >= 1:
                 print("[!]%i: Unknown question type" % self.ID)
@@ -258,14 +268,14 @@ class Survey_Monkey(survey.Survey):
 
         # Weighted randomised checkboxs
         for _ in range(0, len(element_IDs)):
-            if randint(0, len(element_IDs)-1) == 0:
+            if randint(0, len(element_IDs) - 1) == 0:
                 checkbox.append(True)
             else:
                 checkbox.append(False)
 
         # Check at least one checkbox is checked
         if True not in checkbox:
-            i = randint(0, len(element_IDs)-1)
+            i = randint(0, len(element_IDs) - 1)
             checkbox[i] = True
 
         # Go through all elements and check them based on checkbox
@@ -280,7 +290,7 @@ class Survey_Monkey(survey.Survey):
                 self.lock.release()
 
                 # If 'other' is checked answer the textbox
-                if element_ID_i == len(element_IDs)-1 and other_ID is not None:
+                if element_ID_i == len(element_IDs) - 1 and other_ID is not None:
                     element = self.driver.find_element_by_id(other_ID)
                     self.lock.acquire()
                     element.send_keys(get_sentence.get_sentence())
@@ -306,7 +316,7 @@ class Survey_Monkey(survey.Survey):
             other_ID = None
 
         # Select a random multi-choice
-        element_ID_i = randint(0, len(element_IDs)-1)
+        element_ID_i = randint(0, len(element_IDs) - 1)
         element_ID = element_IDs[element_ID_i]
         element = self.driver.find_element_by_id(element_ID)
         self.add_choice(question_ID, element_ID)
@@ -316,7 +326,7 @@ class Survey_Monkey(survey.Survey):
         self.lock.release()
 
         # If 'other' is checked answer the textbox
-        if element_ID_i == len(element_IDs)-1 and other_ID is not None:
+        if element_ID_i == len(element_IDs) - 1 and other_ID is not None:
             element = self.driver.find_element_by_id(other_ID)
             self.lock.acquire()
             element.send_keys(get_sentence.get_sentence())
@@ -342,6 +352,18 @@ class Survey_Monkey(survey.Survey):
             print("[*]%i: CommentBox answered" % self.ID)
         return True
 
+    def do_input(self, question_ID, element):
+        """Answer wds-input text question."""
+        if self.verbose >= 2:
+            print("[*]%i: Doing Wds-input" % self.ID)
+        self.lock.acquire()
+        element.send_keys(get_sentence.get_sentence())
+        self.lock.release()
+
+        if self.verbose >= 2:
+            print("[*]%i: Wds-input answered" % self.ID)
+        return True
+
     def click_button(self, text_list):
         """
         Goes through the text_list, trying to click any available buttons with the same name
@@ -352,7 +374,8 @@ class Survey_Monkey(survey.Survey):
             # Try to acquire the button element
             try:
                 button = self.driver.find_element_by_xpath(
-                    "//button[contains(text(), ' %s')]" % text)
+                    "//button[contains(text(), ' %s')]" % text
+                )
             except NoSuchElementException:
                 pass
             else:
@@ -394,6 +417,7 @@ class Survey_Monkey(survey.Survey):
             -> Boolean
         """
         text_list = set(["Done", "DONE", "done"])
+        input("GOING TO DONE >> ")
         button_clicked = self.click_button(text_list)
 
         if not button_clicked:
